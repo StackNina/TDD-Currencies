@@ -89,7 +89,7 @@ class MoneyTest {
         Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // Arrange local wallet 
         Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));      // Arrange foreign wallet 
 
-        accountBalance = accountBalance.plus(Money.parse("1000"), 1.0);
+        accountBalance = accountBalance.plus(Money.parse("USD 1,000.00"), 1.0);
         foreignMoney = foreignMoney.plus(Money.parse("VEF 1,000.00"),1.0);   // setup foreign wallet
         accountBalance = accountBalance.minus(foreignMoney,0.9);                       // add VEF to USD assuming the conversion is 0.9
         assertThat(accountBalance).isNotEqualTo(Money.parse("USD 0.00")); // Assert
