@@ -1,5 +1,7 @@
 package team.dedica.currencies;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -57,4 +59,23 @@ class MoneyTest {
         assertThat(accountBalance).isEqualTo(Money.parse("USD 456.78"));
     }
 
+    @Test
+    void testCurrencyExchangedeposit(){
+        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // local wallet 
+        Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));      // foreign wallet 
+        foreignMoney= foreignMoney.plus(Money.parse("VEF 1,000.00"));   // setup foreign wallet
+        accountBalance = accountBalance.plus(foreignMoney);                        // add VEF to USD
+        assertThat(accountBalance).isNotEqualTo(Money.parse("USD 1,000.00")); // assumtion, conversion of USD and VEF will never be 1:1
+    }
+
+    @Test
+    void testCurrencyExchangeWithdraw(){
+        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));        // local wallet 
+        Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));          // foreign wallet 
+        accountBalance= accountBalance.plus(Money.parse("USD 1,000.00"));   // setup local wallet
+        foreignMoney= foreignMoney.plus(Money.parse("VEF 100.00"));         // setup foreign wallet
+        accountBalance = accountBalance.minus(foreignMoney);                           // withdraw VEF from USD
+        assertThat(accountBalance).isNotEqualTo(Money.parse("USD 900.00")); // assumtion, conversion of USD and VEF will never be 1:1
+    }
 }
+
