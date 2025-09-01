@@ -36,13 +36,58 @@ public class Money {
         return new Money(Math.round(amount * factor), currency);
     }
 
+    /**
+     * @decapritated
+     * @param other money object 
+     * @return money object with added amount
+     * @throws IllegalArgumentException if this and other dont match in currency
+     */
+    @Deprecated
     public Money plus(Money other) {
-        return new Money(amount + other.amount, currency);
+        if(this.currency.equals(other.currency)){
+            return new Money(amount + other.amount, currency);
+        }
+        else{
+            throw new IllegalArgumentException("It is not allowed to use 2 different Currencies.\n Use the plus method with 2 arguments, for exchangerates");
+        }
     }
 
-    public Money minus(Money other) {
-        return new Money(amount - other.amount, currency);
+    /**
+     * 
+     * @param other money object
+     * @param er exchange rate of other.currency to this.currency
+     * @return money object with added amount
+     */
+    public Money plus(Money other, double er){
+        return new Money(amount + (other.times(er)).amount, currency);
     }
+
+    /**
+     * @decapritated
+     * @param other money object 
+     * @return money object with to be subtracted amount
+     * @throws IllegalArgumentException if this and other dont match in currency
+     */
+    @Deprecated
+    public Money minus(Money other) {
+        if(this.currency.equals(other.currency)){
+            return new Money(amount - other.amount, currency);
+        }
+        else{
+            throw new IllegalArgumentException("It is not allowed to use 2 different Currencies.\n Use the plus method with 2 arguments, for exchangerates");
+        }
+    }
+
+    /**
+     * @param other money object
+     * @param er exchange rate of other.currency to this.currency
+     * @return money object with added amount
+     */
+    public Money minus(Money other, double er){
+        return new Money(amount - (other.times(er)).amount, currency);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

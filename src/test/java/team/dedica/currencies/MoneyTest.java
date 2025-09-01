@@ -52,6 +52,14 @@ class MoneyTest {
     }
 
     @Test
+    void testDepositFail(){
+        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // Arrange 
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> accountBalance.plus(Money.parse("VEF 1,000.00")));
+        
+    }
+
+    @Test
     void testWithdraw() {
         Money accountBalance = Money.nothing(Currency.forSymbol("USD"));
         accountBalance = accountBalance.plus(Money.parse("USD 1,000.00"));
@@ -60,22 +68,31 @@ class MoneyTest {
     }
 
     @Test
-    void testCurrencyExchangedeposit(){
-        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // local wallet 
-        Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));      // foreign wallet 
-        foreignMoney= foreignMoney.plus(Money.parse("VEF 1,000.00"));   // setup foreign wallet
-        accountBalance = accountBalance.plus(foreignMoney);                        // add VEF to USD
-        assertThat(accountBalance).isNotEqualTo(Money.parse("USD 1,000.00")); // assumtion, conversion of USD and VEF will never be 1:1
+    void testWithdrawFail(){
+        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // Arrange 
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> accountBalance.minus(Money.parse("VEF 1,000.00")));
     }
 
     @Test
-    void testCurrencyExchangeWithdraw(){
-        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));        // local wallet 
-        Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));          // foreign wallet 
-        accountBalance= accountBalance.plus(Money.parse("USD 1,000.00"));   // setup local wallet
-        foreignMoney= foreignMoney.plus(Money.parse("VEF 100.00"));         // setup foreign wallet
-        accountBalance = accountBalance.minus(foreignMoney);                           // withdraw VEF from USD
-        assertThat(accountBalance).isNotEqualTo(Money.parse("USD 900.00")); // assumtion, conversion of USD and VEF will never be 1:1
+    void testDepositEr(){
+        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // Arrange local wallet 
+        Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));      // Arrange foreign wallet 
+
+        foreignMoney= foreignMoney.plus(Money.parse("VEF 1,000.00"),1.0);   // setup foreign wallet
+        accountBalance = accountBalance.plus(foreignMoney,0.9);                       // add VEF to USD assuming the conversion is 0.9
+        assertThat(accountBalance).isNotEqualTo(Money.parse("USD 1,000.00")); // Assert
+    }
+
+    @Test
+    void testWithdrawEr(){
+        Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // Arrange local wallet 
+        Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));      // Arrange foreign wallet 
+
+        accountBalance = accountBalance.plus(Money.parse("1000"), 1.0);
+        foreignMoney = foreignMoney.plus(Money.parse("VEF 1,000.00"),1.0);   // setup foreign wallet
+        accountBalance = accountBalance.minus(foreignMoney,0.9);                       // add VEF to USD assuming the conversion is 0.9
+        assertThat(accountBalance).isNotEqualTo(Money.parse("USD 0.00")); // Assert
     }
 }
 
