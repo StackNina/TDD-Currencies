@@ -37,11 +37,25 @@ public class Money {
     }
 
     public Money plus(Money other) {
-        return new Money(amount + other.amount, currency);
+        if (this.currency.equals(other.currency)) {
+            return new Money(amount + other.amount, currency);
+        }
+        else {
+            Converter con = new ReadConverter();
+            return new Money(Math.round(amount + other.amount*con.getConversion(this.currency, other.currency)), currency);
+        }
+        
     }
 
     public Money minus(Money other) {
-        return new Money(amount - other.amount, currency);
+        if (this.currency.equals(other.currency)) {
+            return new Money(amount - other.amount, currency);
+        }
+        else {
+            Converter con = new ReadConverter();
+            return new Money(Math.round(amount - other.amount*con.getConversion(this.currency, other.currency)), currency);
+        }
+        
     }
 
     @Override

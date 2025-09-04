@@ -61,6 +61,7 @@ class MoneyTest {
 
     @Test
     void testCurrencyExchangedeposit(){
+        System.out.println("test Running");
         Money accountBalance = Money.nothing(Currency.forSymbol("USD"));    // local wallet 
         Money foreignMoney = Money.nothing(Currency.forSymbol("VEF"));      // foreign wallet 
         foreignMoney= foreignMoney.plus(Money.parse("VEF 1,000.00"));   // setup foreign wallet
